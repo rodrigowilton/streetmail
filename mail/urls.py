@@ -5,6 +5,7 @@ urlpatterns = [
     # Outras URLs
     path('', views.index, name='index'),  # URL raiz mapeada para a view 'index'
     path('entrega/', views.entrega, name='entrega'),  # URL para a entrega
+    path('buscar_moradores/<str:apartamento>/', views.buscar_moradores, name='buscar_moradores'),
     
     path('streetmail', views.streetmail, name='streetmail'),  # URL para o template StreetMail
     # Rota para criar uma nova correspondência/encomenda

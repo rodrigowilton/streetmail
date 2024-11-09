@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-br" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,6 +15,7 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
+            text-align: center;  /* Centraliza o conteúdo da página */
         }
         .container {
             width: 90%;
@@ -26,41 +27,26 @@
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             margin: 20px;
         }
-        h2 {
-            text-align: center;
-            color: #333;
-            font-size: 24px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-        }
         label {
-            margin-top: 10px;
+            color: #333;
+            font-size: 20px;
+            text-align: center;
             font-weight: bold;
-            color: #555;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
-            padding: 10px;
-            margin-top: 5px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 16px;
-            background-color: #f9f9f9;
-            width: 100%;
-            box-sizing: border-box;
-            text-transform: capitalize; /* Transformação para a primeira letra de cada palavra maiúscula */
+        h2 {
+            display: block; /* Torna o label um bloco para centralizar */
+            font-family: 'Courier New', Courier, monospace; /* Fonte trabalhada - estilo monospace */
+            margin-top: 20px;
+            font-size: 52px;
+            font-weight: bold;
+            color: blue; /* Cor verde */
         }
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-        .form-check {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .hidden {
-            display: none; /* Oculta o campo "Recebeu" */
+        h1 {
+            display: block; /* Torna o label um bloco para centralizar */
+            margin-top: 20px;
+            font-size: 50px;
+            font-weight: bold;
+            color: green; /* Cor verde */
         }
         .button-group {
             text-align: center;
@@ -90,17 +76,20 @@
         .button-group button:hover, .button-group a:hover {
             opacity: 0.9;
         }
+        h4 {
+            font-size: 18px;
+            color: #333; /* Cor do texto */
+            font-weight: normal;
+            margin-top: 20px;
+        }
 
         /* Responsividade */
         @media (max-width: 600px) {
-            h2 {
-                font-size: 20px;
+            h1 {
+                font-size: 24px;
             }
             .container {
                 padding: 15px;
-            }
-            input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
-                font-size: 14px;
             }
             .button-group button, .button-group a {
                 font-size: 14px;
@@ -112,13 +101,27 @@
 <body>
 
 <div class="container">
+    <br>
+    <h2>StreetMail</h2>
+    <br>
+    <br>
+    <!-- Label com o texto "Condomínio" em verde -->
+    <label>Condomínio</label>
+
+    <!-- Exibe o nome do condomínio -->
     <h1>{{ condominio }}</h1>
+    <br>
+    <br>
+    <br>
 
     <div class="button-group">
         <button onclick="location.href='/retirada/'">Retirada</button>
         <button onclick="location.href='/mail/entrega/'">Entrega</button>
     </div>
+    <br>
+    <br><!-- Aqui está o h4, que ficará abaixo dos botões -->
+    <br>
+    <h4><strong>(27) 9 99273-4399</h4></strong>
 </div>
-
 </body>
 </html>

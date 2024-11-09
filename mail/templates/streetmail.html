@@ -114,7 +114,8 @@
 <div class="container">
     <h2>StreetMail</h2>
 
-    <form id="streetMailForm">
+    <form id="streetMailForm" method="POST">
+        {% csrf_token %}
         <!-- Exibe o condomínio -->
         <label for="condominio">Condomínio:</label>
         <input type="text" id="condominio" value="{{ condominio }}" readonly>
@@ -128,7 +129,7 @@
         <select id="morador" name="morador">
             <option value="">Selecione o morador</option>
             {% for morador in moradores %}
-            <option value="{{ morador.id }}">{{ morador.nome }}</option>
+            <option value="{{ morador.id }}">{{ morador.morador }}</option>
             {% endfor %}
         </select>
 
@@ -157,17 +158,21 @@
 </div>
 
 <script>
-    document.getElementById('streetMailForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-
-        // Exibe a mensagem de agradecimento
-        document.getElementById('message').style.display = 'block';
-
-        // Limpa o formulário após 3 segundos e retorna
-        setTimeout(function() {
-            document.getElementById('streetMailForm').reset();
-            document.getElementById('message').style.display = 'none';
-        }, 3000);
+    // Função para atualizar a lista de moradores ao digitar o apartamento
+    document.getElementById('apartamento').addEventListener('input', function() {
+        var apartamento = this.value;
+        fetch(`/buscar_moradores/${apartamento}/`)
+            .then(response => response.json())
+            .then(data => {
+                var moradorSelect = document.getElementById('morador');
+                moradorSelect.innerHTML = '<option value="">Selecione o morador</option>';
+                data.moradores.forEach(function(morador) {
+                    var option = document.createElement('option');
+                    option.value = morador.id;
+                    option.textContent = morador.morador;
+                    moradorSelect.appendChild(option);
+                });
+            });
     });
 </script>
 
