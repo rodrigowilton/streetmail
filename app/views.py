@@ -30,7 +30,43 @@ def criar_apto(request):
         form = AptoForm()
 
     return render(request, "criar_apto.html", {"form": form})
+def cadicionar_morador(request):
+    if request.method == "POST":
+        form = AptoForm(request.POST)
+        if form.is_valid():
+            # Atribuindo o primeiro condomínio como valor padrão
+            condominio = Apto.objects.first()  # Busca o primeiro condomínio da tabela
 
+            # Obtendo os dados do formulário
+            apartamento = form.save(commit=False)  # Não salva ainda, para modificar o campo 'condominio'
+
+            # Define o condomínio no apartamento
+            if condominio:
+                apartamento.condominio = condominio
+
+            apartamento.save()  # Agora salva o apartamento com o condomínio atribuído
+
+            # Criando o Mail relacionado ao Apto criado
+            mail = Mail(
+                morador=apartamento.morador,
+                condominio=apartamento.condominio,
+                apto=apartamento.apto,
+                tel=apartamento.tel,
+                email=apartamento.email,
+                recebeu=apartamento.recebeu,  # Utiliza o mesmo valor de 'recebeu' do Apto
+                codigo=apartamento.codigo,  # Utiliza o mesmo código do Apto
+                tipo=Mail.CORRESPONDENCIA,  # Pode ser alterado para ENCOMENDA se necessário
+                status=apartamento.status,  # Utiliza o mesmo status do Apto
+                comando=1  # Ajuste conforme o valor desejado para o comando
+            )
+            mail.save()  # Salva o modelo Mail
+
+            return redirect("listar_aptos")  # Redireciona para a listagem de apartamentos
+
+    else:
+        form = AptoForm()
+
+    return render(request, "adicionar_morador.html", {"form": form})
 
 def editar_apto(request, pk):
     apto = get_object_or_404(Apto, pk=pk)
