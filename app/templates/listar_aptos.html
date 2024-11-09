@@ -191,8 +191,8 @@
                 </td>
                 <td>
                     <a href="{% url 'editar_apto' apto.pk %}">Editar</a> |
-					{% if apto.status != 0 %}
-                    	<a href="{% url 'deletar_apto' apto.pk %}" class="delete-link">Deletar</a>
+                    {% if apto.status != 0 %}
+                        <a href="{% url 'deletar_apto' apto.pk %}" class="delete-link">Dsativar</a>
                     {% endif %}
                 </td>
             </tr>
@@ -201,8 +201,13 @@
     </div>
 
     <div class="button-group">
-        <a href="{% url 'criar_apto' %}">Criar Novo Apartamento</a>
-        <a href="{% url 'adicionar_morador' %}">Adicionar Morador</a>
+        {% if not existe_condominio %}
+            <a href="{% url 'criar_apto' %}">Criar Novo Apartamento</a>
+        {% endif %}
+
+        {% if existe_morador %}
+            <a href="{% url 'adicionar_morador' %}">Adicionar Morador</a>
+        {% endif %}
     </div>
 </div>
 

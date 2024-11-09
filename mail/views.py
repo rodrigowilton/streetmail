@@ -1,5 +1,7 @@
+from django.db.models.fields import json
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 from app.models import Mail, Apto
 from django.contrib import messages
 import random
@@ -64,11 +66,28 @@ def criar_mail(request):
 		apto = request.POST.get('apto')
 		tel = request.POST.get('tel')
 		email = request.POST.get('email')
-		tipo = request.POST.get('tipo')
+		tipo = int(request.POST.get('tipo'))  # Convertendo para inteiro
 		comando = request.POST.get('comando')
 		
 		# Gerar um código único
 		codigo = gerar_codigo()
+		
+		# Verificar qual gaveta está disponível, se o tipo de encomenda for 'Encomenda Pequena'
+		gaveta_aberta = None
+		
+		if tipo == Mail.ENCOMENDAPEQUENA:
+			# Procurar gavetas pequenas disponíveis
+			for i in range(1, 7):  # Existem 6 gavetas pequenas
+				gaveta_field = f'gaveta_pequena{i}'
+				gaveta = getattr(Mail.objects.first(), gaveta_field)  # Acessa a gaveta para verificar o status
+				
+				if not gaveta:  # Se a gaveta estiver disponível (False)
+					# Atualiza a gaveta como ocupada (True)
+					mail = Mail.objects.first()
+					setattr(mail, gaveta_field, True)
+					mail.save()  # Salva as alterações no banco
+					gaveta_aberta = f'Gaveta Pequena {i}'  # Armazenar a gaveta aberta
+					break
 		
 		# Criar o objeto Mail
 		mail = Mail(
@@ -84,12 +103,40 @@ def criar_mail(request):
 		mail.save()
 		
 		# Exibir mensagem de sucesso
-		messages.success(request, f'Correspondência/Encomenda criada com sucesso! Código: {codigo}')
+		if gaveta_aberta:
+			messages.success(request,
+							 f'Encomenda criada com sucesso! Código: {codigo}. A encomenda foi alocada na {gaveta_aberta}.')
+		else:
+			messages.success(request,
+							 f'Encomenda criada com sucesso! Código: {codigo}. Não foi possível alocar a encomenda em uma gaveta disponível.')
+		
 		return redirect('confirmacao_mail')  # Redireciona para uma página de confirmação
 	
 	return render(request, 'criar_mail.html')
 
-
 # View para mostrar a página de confirmação
+
+@csrf_exempt
+def salvar_correspondencia(request):
+	if request.method == 'POST':
+		data = json.loads(request.body)
+		apartamento = data.get('apartamento')
+		morador = data.get('morador')
+		tipo = data.get('tipo')
+		codigo = data.get('codigo')
+		
+		# Salve a correspondência no banco de dados, por exemplo:
+		Mail.objects.create(
+			apartamento=apartamento,
+			morador=morador,
+			tipo=tipo,
+			codigo=codigo,
+		)
+		
+		return JsonResponse({'success': True, 'message': 'Correspondência salva com sucesso!'})
+	
+	return JsonResponse({'success': False, 'message': 'Método inválido.'}, status=400)
+
+
 def confirmacao_mail(request):
 	return render(request, 'confirmacao_mail.html')

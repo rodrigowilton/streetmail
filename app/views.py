@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from app.models import Apto, Mail
 from .forms import AptoForm
-
 def criar_apto(request):
     if request.method == "POST":
         form = AptoForm(request.POST)
@@ -29,7 +28,13 @@ def criar_apto(request):
     else:
         form = AptoForm()
 
+        # Verifica se existem condomínios no banco
+        if not Apto.objects.exists():  # Se não existir nenhum apartamento (e, por consequência, condomínio)
+            # Torna o campo condominio editável
+            form.fields['condominio'].widget.attrs.pop('readonly', None)
+
     return render(request, "criar_apto.html", {"form": form})
+
 def cadicionar_morador(request):
     if request.method == "POST":
         form = AptoForm(request.POST)
@@ -90,4 +95,15 @@ def deletar_apto(request, pk):
 
 def listar_aptos(request):
     aptos = Apto.objects.all()
-    return render(request, "listar_aptos.html", {"aptos": aptos})
+
+    # Verifica se existe pelo menos um apartamento (condomínio)
+    existe_condominio = aptos.exists()
+
+    # Verifica se existe pelo menos um morador (campo morador não nulo)
+    existe_morador = aptos.filter(morador__isnull=False).exists()
+
+    return render(request, 'listar_aptos.html', {
+        'aptos': aptos,
+        'existe_condominio': existe_condominio,
+        'existe_morador': existe_morador
+    })
