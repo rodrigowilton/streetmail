@@ -158,12 +158,15 @@
 </div>
 
 <script>
-    // Função para atualizar a lista de moradores ao digitar o apartamento
-    document.getElementById('apartamento').addEventListener('input', function() {
-        var apartamento = this.value;
-        fetch(`/buscar_moradores/${apartamento}/`)
+// Função para atualizar a lista de moradores ao digitar o apartamento
+document.getElementById('apartamento').addEventListener('input', function() {
+    var apartamento = this.value;
+    if (apartamento) {  // Verifique se o apartamento foi preenchido
+        console.log('Buscando moradores para o apartamento:', apartamento);  // Debugging
+        fetch(`/mail/buscar_moradores/${apartamento}/`)
             .then(response => response.json())
             .then(data => {
+                console.log('Moradores recebidos:', data);  // Debugging
                 var moradorSelect = document.getElementById('morador');
                 moradorSelect.innerHTML = '<option value="">Selecione o morador</option>';
                 data.moradores.forEach(function(morador) {
@@ -172,9 +175,14 @@
                     option.textContent = morador.morador;
                     moradorSelect.appendChild(option);
                 });
+            })
+            .catch(error => {
+                console.error('Erro ao buscar moradores:', error);
             });
-    });
+    }
+});
 </script>
+
 
 </body>
 </html>

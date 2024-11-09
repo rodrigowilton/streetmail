@@ -33,10 +33,10 @@ def entrega(request):
 
 
 def buscar_moradores(request, apartamento):
-	moradores = Apto.objects.filter(apto=apartamento, status=True)  # Filtra moradores ativos
-	moradores_list = [{"id": morador.id, "morador": morador.morador} for morador in moradores]
-	return JsonResponse({"moradores": moradores_list})
-
+    # Filtra os moradores pelo campo "apto"
+    moradores = Apto.objects.filter(apto=apartamento)  # Ajuste conforme o nome correto do campo
+    moradores_data = [{"id": morador.id, "morador": morador.morador} for morador in moradores]
+    return JsonResponse({"moradores": moradores_data})
 
 def streetmail(request):
 	# Exemplos de dados para passar para o template
