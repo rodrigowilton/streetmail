@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Apartamentos</title>
+    <style>
+        /* Estilos gerais */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fc;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 28px;
+            margin-top: 20px;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+            background-color: #fff6c7;
+            border: 2px solid #e0d1a3; /* Moldura suave */
+            border-radius: 8px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Estilos para a tabela */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        table th, table td {
+            padding: 12px 15px;
+            text-align: left;
+            border: 1px solid #ddd;
+            font-size: 16px;
+        }
+
+        table th {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        table td {
+            background-color: #f9f9f9;
+        }
+
+        table tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        /* Estilos para os links */
+        a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        /* Estilos para o botão de criar novo apartamento */
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-group a {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 10px 20px;
+            font-size: 16px;
+            border-radius: 5px;
+            margin-top: 20px;
+        }
+
+        .button-group a:hover {
+            background-color: #218838;
+        }
+
+        /* Estilos específicos para o link Deletar */
+        .delete-link {
+            color: red !important;
+            font-weight: bold;
+        }
+
+        .delete-link:hover {
+            color: darkred;
+        }
+
+        /* Responsividade */
+        @media screen and (max-width: 768px) {
+            h2 {
+                font-size: 24px;
+            }
+
+            .container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            table th, table td {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            /* Ajuste para o botão de criar novo apartamento */
+            .button-group a {
+                font-size: 14px;
+                padding: 8px 15px;
+            }
+
+            /* Container para rolagem horizontal */
+            .table-responsive {
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            table {
+                min-width: 600px; /* Define uma largura mínima para a tabela */
+            }
+
+            table td, table th {
+                white-space: nowrap; /* Impede o texto de quebrar para a próxima linha */
+            }
+
+            .button-group {
+                text-align: center;
+                margin-top: 15px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            h2 {
+                font-size: 20px;
+            }
+
+            .container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            table th, table td {
+                font-size: 12px;
+                padding: 8px;
+            }
+
+            .button-group a {
+                font-size: 12px;
+                padding: 6px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Lista de Apartamentos</h2>
+
+    <div class="table-responsive">
+        <table>
+            <tr>
+                <th>Condomínio</th>
+                <th>Morador</th>
+                <th>Apto</th>
+                <th>Telefone</th>
+                <th>Email</th>
+                <th>Status</th>
+                <th>Ações</th>
+            </tr>
+            {% for apto in aptos %}
+            <tr>
+                <td>{{ apto.condominio }}</td>
+                <td>{{ apto.morador }}</td>
+                <td>{{ apto.apto }}</td>
+                <td>{{ apto.tel }}</td>
+                <td>{{ apto.email }}</td>
+                <td style="{% if apto.status == 0 %}color: red;{% else %}color: green;{% endif %}">
+                    {{ apto.status|yesno:"Ativo,Inativo" }}
+                </td>
+                <td>
+                    <a href="{% url 'editar_apto' apto.pk %}">Editar</a> |
+					{% if apto.status != 0 %}
+                    	<a href="{% url 'deletar_apto' apto.pk %}" class="delete-link">Deletar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <div class="button-group">
+        <a href="{% url 'criar_apto' %}">Criar Novo Apartamento</a>
+    </div>
+</div>
+
+</body>
+</html>

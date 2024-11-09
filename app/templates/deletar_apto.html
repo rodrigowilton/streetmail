@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alterar Status do Apartamento</title>
+    <style>
+        /* Estilos para o layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf4fc; /* Fundo azul claro */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff6c7;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e0d1a3; /* Moldura suave */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .button-group button, .button-group a {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button-group button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .button-group a {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .button-group button:hover, .button-group a:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2 style="text-align: center; color: red;font-weight: bold;">Alterar Status do Apartamento</h2>
+    <p>Tem certeza que deseja alterar o status do apartamento {{ apto.apto }} para</p>
+	<p style="text-align: center; color: red;font-weight: bold;">INATIVO?</p>
+    <form method="post">
+        {% csrf_token %}
+		<div class="button-group">
+			<button type="submit">Confirmar</button>
+			<a href="{% url 'listar_aptos' %}">Cancelar</a>
+		</div>
+	</form>
+
+</div>
+
+</body>
+</html>

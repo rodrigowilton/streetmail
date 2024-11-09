@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StreetMail</title>
+    <style>
+        /* Estilos para o layout */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eaf4fc; /* Fundo azul claro */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff6c7;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #e0d1a3; /* Moldura suave */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 20px;
+        }
+        h2 {
+            text-align: center;
+            color: #333;
+            font-size: 24px;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        label {
+            margin-top: 10px;
+            font-weight: bold;
+            color: #555;
+        }
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            background-color: #f9f9f9;
+            width: 100%;
+            box-sizing: border-box;
+            text-transform: capitalize; /* Transformação para a primeira letra de cada palavra maiúscula */
+        }
+        input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none; /* Oculta o campo "Recebeu" */
+        }
+        .button-group {
+            text-align: center;
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .button-group button, .button-group a {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .button-group button {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .button-group a {
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .button-group button:hover, .button-group a:hover {
+            opacity: 0.9;
+        }
+
+        /* Responsividade */
+        @media (max-width: 600px) {
+            h2 {
+                font-size: 20px;
+            }
+            .container {
+                padding: 15px;
+            }
+            input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+                font-size: 14px;
+            }
+            .button-group button, .button-group a {
+                font-size: 14px;
+                padding: 8px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>StreetMail</h2>
+
+    <form id="streetMailForm">
+        <!-- Exibe o condomínio -->
+        <label for="condominio">Condomínio:</label>
+        <input type="text" id="condominio" value="{{ condominio }}" readonly>
+
+        <!-- Campo de apartamento -->
+        <label for="apartamento">Apartamento:</label>
+        <input type="text" id="apartamento" name="apartamento" placeholder="Digite o número do apartamento" required>
+
+        <!-- Lista de moradores -->
+        <label for="morador">Morador:</label>
+        <select id="morador" name="morador">
+            <option value="">Selecione o morador</option>
+            {% for morador in moradores %}
+            <option value="{{ morador.id }}">{{ morador.nome }}</option>
+            {% endfor %}
+        </select>
+
+        <!-- Tipo de correspondência -->
+        <label for="tipo">Tipo:</label>
+        <select id="tipo" name="tipo" required>
+            <option value="">Escolha o tipo</option>
+            <option value="correspondencia">Correspondência</option>
+            <option value="encomenda">Encomenda</option>
+        </select>
+
+        <!-- Código gerado automaticamente -->
+        <label for="codigo">Código:</label>
+        <input type="text" id="codigo" name="codigo" value="{{ codigo }}" readonly>
+
+        <!-- Botão de confirmação -->
+        <div class="button-group">
+            <button type="submit">Confirmar</button>
+        </div>
+    </form>
+
+    <!-- Mensagem de agradecimento após o envio -->
+    <div id="message" class="message" style="display: none;">
+        <p>Obrigado! Sua solicitação foi registrada com sucesso.</p>
+    </div>
+</div>
+
+<script>
+    document.getElementById('streetMailForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        // Exibe a mensagem de agradecimento
+        document.getElementById('message').style.display = 'block';
+
+        // Limpa o formulário após 3 segundos e retorna
+        setTimeout(function() {
+            document.getElementById('streetMailForm').reset();
+            document.getElementById('message').style.display = 'none';
+        }, 3000);
+    });
+</script>
+
+</body>
+</html>
