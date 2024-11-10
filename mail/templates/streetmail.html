@@ -50,6 +50,22 @@
             width: 100%;
             box-sizing: border-box;
         }
+
+		#cancelarBtn {
+			background-color: #ff0000; /* Cor de fundo vermelha */
+			color: white; /* Cor do texto branca */
+			padding: 10px 20px; /* Padding para dar espaço dentro do botão */
+			border: none; /* Sem borda */
+			border-radius: 5px; /* Borda arredondada */
+			font-size: 16px; /* Tamanho da fonte */
+			cursor: pointer; /* Cursor em formato de mãozinha */
+			transition: background-color 0.3s ease; /* Efeito suave na troca de cor */
+		}
+
+		#cancelarBtn:hover {
+			background-color: #cc0000; /* Cor do fundo ao passar o mouse */
+		}
+
         .button-group {
             display: flex;
             flex-wrap: wrap;
@@ -151,9 +167,11 @@
         </div>
         <input type="text" id="codigo" name="codigo" value="{{ codigo }}" readonly hidden>
 
-        <div class="button-group">
-            <button type="submit" id="confirmarBtn">Confirmar</button>
-        </div>
+		<div class="button-group">
+			<button type="submit" id="confirmarBtn" style="display: none;">Confirmar</button>
+			<button type="submit" id="cancelarBtn" style="display: none;">Cancelar</button>
+		</div>
+
     </form>
 
     <div id="message" class="message" style="display: none;">
@@ -164,6 +182,11 @@
 document.querySelectorAll('#tipo-buttons button').forEach(button => {
     button.addEventListener('click', function() {
         // Define o status de todos os botões como 0
+
+
+        document.getElementById('cancelarBtn').style.display = 'block';
+
+
         document.querySelectorAll('#tipo-buttons button').forEach(btn => {
             btn.setAttribute('data-status', '0');
             btn.style.display = 'none';  // Esconde todos os botões
@@ -205,6 +228,9 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
         // Exibe a gaveta selecionada
         this.classList.add('gaveta-selected');
         this.style.display = 'block'; // Exibe a gaveta selecionada
+
+        document.getElementById('confirmarBtn').style.display = 'block';
+
     });
 });
 </script>
