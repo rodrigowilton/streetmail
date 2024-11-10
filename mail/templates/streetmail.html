@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StreetMail</title>
     <style>
-        /* Estilos para o layout */
+        /* Estilos gerais para o layout */
         body {
             font-family: Arial, sans-serif;
             background-color: #eaf4fc;
@@ -40,7 +40,7 @@
             font-weight: bold;
             color: #555;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -51,12 +51,11 @@
             box-sizing: border-box;
         }
         .button-group {
-            text-align: center;
-            margin-top: 20px;
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             justify-content: center;
+            margin-top: 15px;
         }
         .button-group button {
             padding: 10px;
@@ -86,6 +85,14 @@
                 width: calc(50% - 10px); /* 2 botões por linha */
             }
         }
+        .message {
+            text-align: center;
+            margin-top: 20px;
+            background-color: #d4edda;
+            padding: 10px;
+            border-radius: 5px;
+            color: #155724;
+        }
     </style>
 </head>
 <body>
@@ -111,16 +118,19 @@
 
         <label>Tipo de Correspondência:</label>
         <div class="button-group" id="tipo-buttons">
-            <button type="button" data-tipo="correspondencia">Correspondência</button>
-            <button type="button" data-tipo="encomenda_pequena">Encomenda Pequena</button>
-            <button type="button" data-tipo="encomenda_media">Encomenda Média</button>
-            <button type="button" data-tipo="encomenda_grande">Encomenda Grande</button>
+            <button type="button" data-tipo="correspondencia" data-status="0">Correspondência</button>
+            <button type="button" data-tipo="encomenda_pequena" data-status="0">Encomenda Pequena</button>
+		</div>
+		<div class="button-group" id="tipo-buttons">
+
+            <button type="button" data-tipo="encomenda_media" data-status="0">Encomenda Média</button>
+            <button type="button" data-tipo="encomenda_grande" data-status="0">Encomenda Grande</button>
         </div>
 
         <input type="hidden" id="tipo" name="tipo" required>
 
         <div class="button-group" id="gaveta-buttons" style="display: none;">
-            <button type="button" class="gaveta" data-gaveta="gaveta1">Gaveta Pequena 1</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta1" >Gaveta Pequena 1</button>
             <button type="button" class="gaveta" data-gaveta="gaveta2">Gaveta Pequena 2</button>
             <button type="button" class="gaveta" data-gaveta="gaveta3">Gaveta Pequena 3</button>
             <button type="button" class="gaveta" data-gaveta="gaveta4">Gaveta Pequena 4</button>
@@ -139,8 +149,7 @@
             <button type="button" class="gaveta" data-gaveta="gavetag3">Gaveta Grande 3</button>
             <button type="button" class="gaveta" data-gaveta="gavetag4">Gaveta Grande 4</button>
         </div>
-        <label for="codigo">Código:</label>
-        <input type="text" id="codigo" name="codigo" value="{{ codigo }}" readonly>
+        <input type="text" id="codigo" name="codigo" value="{{ codigo }}" readonly hidden>
 
         <div class="button-group">
             <button type="submit" id="confirmarBtn">Confirmar</button>
@@ -151,41 +160,53 @@
         <p>Obrigado! Sua solicitação foi registrada com sucesso.</p>
     </div>
 </div>
-
 <script>
 document.querySelectorAll('#tipo-buttons button').forEach(button => {
     button.addEventListener('click', function() {
-        // Remove seleção de todos os botões de tipo
-        document.querySelectorAll('#tipo-buttons button').forEach(btn => btn.classList.remove('selected'));
-        this.classList.add('selected');
+        // Define o status de todos os botões como 0
+        document.querySelectorAll('#tipo-buttons button').forEach(btn => {
+            btn.setAttribute('data-status', '0');
+            btn.style.display = 'none';  // Esconde todos os botões
+        });
 
-        // Atualiza o valor do tipo no campo oculto
-        document.getElementById('tipo').value = this.getAttribute('data-tipo');
+        // Exibe o botão clicado e define seu status como 1
+        this.setAttribute('data-status', '1');
+        this.style.display = 'block'; // Exibe o botão clicado
 
-        // Oculta todas as seções de gavetas
-        document.getElementById('gaveta-buttons').style.display = 'none';
-        document.getElementById('gaveta-buttons1').style.display = 'none';
-        document.getElementById('gaveta-buttons2').style.display = 'none';
-
-        // Exibe a seção de gavetas correta
-        if (this.getAttribute('data-tipo') === 'correspondencia' || this.getAttribute('data-tipo') === 'encomenda_pequena') {
+        // Exibe as gavetas correspondentes ao tipo
+        if (this.getAttribute('data-tipo') === 'correspondencia') {
             document.getElementById('gaveta-buttons').style.display = 'flex';
+            document.getElementById('gaveta-buttons1').style.display = 'none';
+            document.getElementById('gaveta-buttons2').style.display = 'none';
+        } else if (this.getAttribute('data-tipo') === 'encomenda_pequena') {
+            document.getElementById('gaveta-buttons').style.display = 'flex';
+            document.getElementById('gaveta-buttons1').style.display = 'none';
+            document.getElementById('gaveta-buttons2').style.display = 'none';
         } else if (this.getAttribute('data-tipo') === 'encomenda_media') {
+            document.getElementById('gaveta-buttons').style.display = 'none';
             document.getElementById('gaveta-buttons1').style.display = 'flex';
+            document.getElementById('gaveta-buttons2').style.display = 'none';
         } else if (this.getAttribute('data-tipo') === 'encomenda_grande') {
+            document.getElementById('gaveta-buttons').style.display = 'none';
+            document.getElementById('gaveta-buttons1').style.display = 'none';
             document.getElementById('gaveta-buttons2').style.display = 'flex';
         }
     });
 });
 
-document.querySelectorAll('.gaveta').forEach(gaveta => {
-    gaveta.addEventListener('click', function() {
-        // Remove seleção de todas as gavetas
-        document.querySelectorAll('.gaveta').forEach(g => g.classList.remove('gaveta-selected'));
+document.querySelectorAll('.gaveta').forEach(gavetaButton => {
+    gavetaButton.addEventListener('click', function() {
+        // Esconde todas as gavetas
+        document.querySelectorAll('.gaveta').forEach(button => {
+            button.classList.remove('gaveta-selected');
+            button.style.display = 'none'; // Esconde todas as gavetas
+        });
+
+        // Exibe a gaveta selecionada
         this.classList.add('gaveta-selected');
+        this.style.display = 'block'; // Exibe a gaveta selecionada
     });
 });
 </script>
-
 </body>
 </html>
