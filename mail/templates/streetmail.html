@@ -8,7 +8,7 @@
         /* Estilos para o layout */
         body {
             font-family: Arial, sans-serif;
-            background-color: #eaf4fc; /* Fundo azul claro */
+            background-color: #eaf4fc;
             margin: 0;
             padding: 0;
             display: flex;
@@ -22,7 +22,7 @@
             background-color: #fff6c7;
             padding: 20px;
             border-radius: 8px;
-            border: 2px solid #e0d1a3; /* Moldura suave */
+            border: 2px solid #e0d1a3;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             margin: 20px;
         }
@@ -40,7 +40,7 @@
             font-weight: bold;
             color: #555;
         }
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"] {
             padding: 10px;
             margin-top: 5px;
             border: 1px solid #ccc;
@@ -49,18 +49,6 @@
             background-color: #f9f9f9;
             width: 100%;
             box-sizing: border-box;
-            text-transform: capitalize; /* Transformação para a primeira letra de cada palavra maiúscula */
-        }
-        input[type="checkbox"] {
-            margin-right: 8px;
-        }
-        .form-check {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-        }
-        .hidden {
-            display: none; /* Oculta o campo "Recebeu" */
         }
         .button-group {
             text-align: center;
@@ -70,41 +58,32 @@
             gap: 10px;
             justify-content: center;
         }
-        .button-group button, .button-group a {
-            padding: 10px 20px;
-            margin: 5px;
+        .button-group button {
+            padding: 10px;
             border: none;
             border-radius: 4px;
-            font-size: 16px;
-            text-decoration: none;
-            cursor: pointer;
-        }
-        .button-group button {
+            font-size: 14px;
             background-color: #007bff;
             color: #fff;
+            cursor: pointer;
+            width: calc(33.33% - 10px); /* 3 botões por linha */
+            box-sizing: border-box;
         }
-        .button-group a {
-            background-color: #6c757d;
-            color: #fff;
+        .button-group button.selected {
+            background-color: #008000; /* Cor diferente para botão selecionado */
         }
-        .button-group button:hover, .button-group a:hover {
+        .button-group button.gaveta-selected {
+            background-color: #008000; /* Cor diferente para gaveta selecionada */
+        }
+        .button-group button:hover {
             opacity: 0.9;
         }
-
         /* Responsividade */
         @media (max-width: 600px) {
-            h2 {
-                font-size: 20px;
-            }
-            .container {
-                padding: 15px;
-            }
-            input[type="text"], input[type="email"], input[type="tel"], input[type="number"], select {
-                font-size: 14px;
-            }
-            .button-group button, .button-group a {
-                font-size: 14px;
-                padding: 8px 16px;
+            .button-group button {
+                font-size: 12px;
+                padding: 8px;
+                width: calc(50% - 10px); /* 2 botões por linha */
             }
         }
     </style>
@@ -116,15 +95,12 @@
 
     <form id="streetMailForm" method="POST">
         {% csrf_token %}
-        <!-- Exibe o condomínio -->
         <label for="condominio">Condomínio:</label>
         <input type="text" id="condominio" value="{{ condominio }}" readonly>
 
-        <!-- Campo de apartamento -->
         <label for="apartamento">Apartamento:</label>
         <input type="text" id="apartamento" name="apartamento" placeholder="Digite o número do apartamento" required>
 
-        <!-- Lista de moradores -->
         <label for="morador">Morador:</label>
         <select id="morador" name="morador">
             <option value="">Selecione o morador</option>
@@ -133,101 +109,83 @@
             {% endfor %}
         </select>
 
-        <!-- Tipo de correspondência -->
-        <label for="tipo">Tipo:</label>
-        <select id="tipo" name="tipo" required>
-            <option value="">Escolha o tipo</option>
-            <option value="correspondencia">Correspondência</option>
-            <option value="encomenda">Encomenda Pequena</option>
-            <option value="encomenda">Encomenda Média</option>
-            <option value="encomenda">Encomenda Grande</option>
-        </select>
+        <label>Tipo de Correspondência:</label>
+        <div class="button-group" id="tipo-buttons">
+            <button type="button" data-tipo="correspondencia">Correspondência</button>
+            <button type="button" data-tipo="encomenda_pequena">Encomenda Pequena</button>
+            <button type="button" data-tipo="encomenda_media">Encomenda Média</button>
+            <button type="button" data-tipo="encomenda_grande">Encomenda Grande</button>
+        </div>
 
-        <!-- Código gerado automaticamente -->
+        <input type="hidden" id="tipo" name="tipo" required>
+
+        <div class="button-group" id="gaveta-buttons" style="display: none;">
+            <button type="button" class="gaveta" data-gaveta="gaveta1">Gaveta Pequena 1</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta2">Gaveta Pequena 2</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta3">Gaveta Pequena 3</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta4">Gaveta Pequena 4</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta5">Gaveta Pequena 5</button>
+            <button type="button" class="gaveta" data-gaveta="gaveta6">Gaveta Pequena 6</button>
+        </div>
+        <div class="button-group" id="gaveta-buttons1" style="display: none;">
+            <button type="button" class="gaveta" data-gaveta="gavetam1">Gaveta Média 1</button>
+            <button type="button" class="gaveta" data-gaveta="gavetam2">Gaveta Média 2</button>
+            <button type="button" class="gaveta" data-gaveta="gavetam3">Gaveta Média 3</button>
+            <button type="button" class="gaveta" data-gaveta="gavetam4">Gaveta Média 4</button>
+        </div>
+        <div class="button-group" id="gaveta-buttons2" style="display: none;">
+            <button type="button" class="gaveta" data-gaveta="gavetag1">Gaveta Grande 1</button>
+            <button type="button" class="gaveta" data-gaveta="gavetag2">Gaveta Grande 2</button>
+            <button type="button" class="gaveta" data-gaveta="gavetag3">Gaveta Grande 3</button>
+            <button type="button" class="gaveta" data-gaveta="gavetag4">Gaveta Grande 4</button>
+        </div>
         <label for="codigo">Código:</label>
         <input type="text" id="codigo" name="codigo" value="{{ codigo }}" readonly>
 
-        <!-- Botão de confirmação -->
         <div class="button-group">
             <button type="submit" id="confirmarBtn">Confirmar</button>
         </div>
     </form>
 
-    <!-- Mensagem de agradecimento após o envio -->
     <div id="message" class="message" style="display: none;">
         <p>Obrigado! Sua solicitação foi registrada com sucesso.</p>
     </div>
 </div>
 
 <script>
-// Função para atualizar a lista de moradores ao digitar o apartamento
-document.getElementById('apartamento').addEventListener('input', function() {
-    var apartamento = this.value;
-    if (apartamento) {  // Verifique se o apartamento foi preenchido
-        console.log('Buscando moradores para o apartamento:', apartamento);  // Debugging
-        fetch(`/mail/buscar_moradores/${apartamento}/`)
-            .then(response => response.json())
-            .then(data => {
-                console.log('Moradores recebidos:', data);  // Debugging
-                var moradorSelect = document.getElementById('morador');
-                moradorSelect.innerHTML = '<option value="">Selecione o morador</option>';
-                data.moradores.forEach(function(morador) {
-                    var option = document.createElement('option');
-                    option.value = morador.id;
-                    option.textContent = morador.morador;
-                    moradorSelect.appendChild(option);
-                });
-            })
-            .catch(error => {
-                console.error('Erro ao buscar moradores:', error);
-            });
-    }
+document.querySelectorAll('#tipo-buttons button').forEach(button => {
+    button.addEventListener('click', function() {
+        // Remove seleção de todos os botões de tipo
+        document.querySelectorAll('#tipo-buttons button').forEach(btn => btn.classList.remove('selected'));
+        this.classList.add('selected');
+
+        // Atualiza o valor do tipo no campo oculto
+        document.getElementById('tipo').value = this.getAttribute('data-tipo');
+
+        // Oculta todas as seções de gavetas
+        document.getElementById('gaveta-buttons').style.display = 'none';
+        document.getElementById('gaveta-buttons1').style.display = 'none';
+        document.getElementById('gaveta-buttons2').style.display = 'none';
+
+        // Exibe a seção de gavetas correta
+        if (this.getAttribute('data-tipo') === 'correspondencia' || this.getAttribute('data-tipo') === 'encomenda_pequena') {
+            document.getElementById('gaveta-buttons').style.display = 'flex';
+        } else if (this.getAttribute('data-tipo') === 'encomenda_media') {
+            document.getElementById('gaveta-buttons1').style.display = 'flex';
+        } else if (this.getAttribute('data-tipo') === 'encomenda_grande') {
+            document.getElementById('gaveta-buttons2').style.display = 'flex';
+        }
+    });
 });
 
-// Função para gerar o código automaticamente
-function gerarCodigo() {
-    // Lógica para gerar código único (Exemplo: um código incremental ou randomizado)
-    return 'C' + Math.floor(Math.random() * 1000); // Exemplo simples
-}
-
-// Submissão do formulário via AJAX
-document.getElementById('streetMailForm').addEventListener('submit', function(event) {
-    event.preventDefault(); // Impede a submissão padrão do formulário
-
-    var apartamento = document.getElementById('apartamento').value;
-    var morador = document.getElementById('morador').value;
-    var tipo = document.getElementById('tipo').value;
-
-    // Gerar código e exibir gaveta aberta
-    var codigoGerado = gerarCodigo();
-    document.getElementById('codigo').value = codigoGerado;
-    alert('Código gerado: ' + codigoGerado + ' - Gaveta X aberta!');
-
-    // Enviar dados via AJAX
-    fetch('/mail/salvar_correspondencia/', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
-        },
-        body: JSON.stringify({
-            apartamento: apartamento,
-            morador: morador,
-            tipo: tipo,
-            codigo: codigoGerado
-        })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log('Resposta do servidor:', data); // Debugging
-        if (data.success) {
-            document.getElementById('message').style.display = 'block';
-        }
-    })
-    .catch(error => {
-        console.error('Erro ao salvar:', error);
+document.querySelectorAll('.gaveta').forEach(gaveta => {
+    gaveta.addEventListener('click', function() {
+        // Remove seleção de todas as gavetas
+        document.querySelectorAll('.gaveta').forEach(g => g.classList.remove('gaveta-selected'));
+        this.classList.add('gaveta-selected');
     });
 });
 </script>
+
 </body>
 </html>
