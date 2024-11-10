@@ -283,7 +283,7 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
     	window.location.href = '/mail';
 });
 
-// Function to handle apartamento input change (Atualiza morador sem recarregar a página)
+// Function to handle apartamento input change
 document.getElementById('apartamento').addEventListener('input', function() {
     let apartamento = this.value;
     if (apartamento.length > 0) {
@@ -299,6 +299,31 @@ document.getElementById('apartamento').addEventListener('input', function() {
                     selectMorador.appendChild(option);
                 });
             });
+    }
+});
+
+// Adicionando a funcionalidade para mover o foco para o próximo campo ao pressionar Enter
+document.getElementById('apartamento').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        // Impede o envio do formulário ao pressionar Enter
+        event.preventDefault();
+
+        // Faz a busca do morador sem recarregar a página
+        let apartamento = this.value;
+        if (apartamento.length > 0) {
+            fetch(`/mail/buscar_moradores/${apartamento}`)
+                .then(response => response.json())
+                .then(data => {
+                    let selectMorador = document.getElementById('morador');
+                    selectMorador.innerHTML = '<option value="">Selecione o morador</option>';
+                    data.moradores.forEach(morador => {
+                        let option = document.createElement('option');
+                        option.value = morador.id;
+                        option.textContent = morador.morador;
+                        selectMorador.appendChild(option);
+                    });
+                });
+        }
     }
 });
 
