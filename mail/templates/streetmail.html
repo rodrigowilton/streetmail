@@ -232,12 +232,38 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
 
         document.getElementById('confirmarBtn').style.display = 'block';
 
+		// Mantém o valor do apartamento visível ao digitar
+			document.getElementById('apartamento').addEventListener('input', function(event) {
+		// Não faz nada, só mantém o valor
+		});
 
-    });
+	 });
 });
-	document.getElementById('cancelarBtn').addEventListener('click', function() {
-    window.location.href = '/mail'; // Redireciona para /mail
+
+// Function to handle 'Cancelar' button click
+document.getElementById('cancelarBtn').addEventListener('click', function() {
+    window.location.href = '/mail';
 });
+
+// Function to handle apartamento input change
+document.getElementById('apartamento').addEventListener('input', function() {
+    let apartamento = this.value;
+    if (apartamento.length > 0) {
+        fetch(`/buscar_morador/${apartamento}`)
+            .then(response => response.json())
+            .then(data => {
+                let selectMorador = document.getElementById('morador');
+                selectMorador.innerHTML = '<option value="">Selecione o morador</option>';
+                data.moradores.forEach(morador => {
+                    let option = document.createElement('option');
+                    option.value = morador.id;
+                    option.textContent = morador.morador;
+                    selectMorador.appendChild(option);
+                });
+            });
+    }
+});
+
 </script>
 </body>
 </html>
