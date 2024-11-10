@@ -181,6 +181,7 @@
 <script>
 document.querySelectorAll('#tipo-buttons button').forEach(button => {
     button.addEventListener('click', function() {
+
         // Define o status de todos os botões como 0
 
 
@@ -231,7 +232,11 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
 
         document.getElementById('confirmarBtn').style.display = 'block';
 
+
     });
+});
+	document.getElementById('cancelarBtn').addEventListener('click', function() {
+    window.location.href = '/mail'; // Redireciona para /mail
 });
 </script>
 </body>
