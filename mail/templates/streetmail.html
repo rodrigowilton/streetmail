@@ -169,8 +169,7 @@
 
 		<div class="button-group">
 			<button type="submit" id="confirmarBtn" style="display: none;">Confirmar</button>
-			<!-- O código do botão cancelar já está correto -->
-			<button type="button" id="cancelarBtn" style="display: none;">Cancelar</button>
+			<button type="submit" id="cancelarBtn" style="display: none;">Cancelar</button>
 		</div>
 
     </form>
@@ -195,14 +194,16 @@ document.querySelectorAll('#tipo-buttons button').forEach(button => {
         this.style.display = 'block'; // Exibe o botão clicado
 
         // Exibe as gavetas correspondentes ao tipo
-        if (this.getAttribute('data-tipo') === 'correspondencia') {
+        const tipoSelecionado = this.getAttribute('data-tipo');
+
+        // Verifica se o tipo é 'correspondencia' ou 'encomenda_pequena'
+        if (tipoSelecionado === 'correspondencia' || tipoSelecionado === 'encomenda_pequena') {
             document.getElementById('gaveta-buttons').style.display = 'flex';
         } else {
             document.getElementById('gaveta-buttons').style.display = 'none';
         }
     });
 });
-
 document.querySelectorAll('.gaveta').forEach(gavetaButton => {
     gavetaButton.addEventListener('click', function() {
         // Esconde todas as gavetas
@@ -219,12 +220,12 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
     });
 });
 
-// Função para lidar com o clique no botão 'Cancelar'
-document.getElementById('cancelarBtn').addEventListener('click', function() {
-    document.getElementById('morador').value = "";  // Limpa o valor do select
+// Function to handle 'Cancelar' button click
+		document.getElementById('cancelarBtn').addEventListener('click', function() {
 
-    // Redireciona para a página /mail
-    window.location.href = '/mail';
+    	document.getElementById('morador').value = "";  // Limpa o valor do select
+
+    	window.location.href = '/mail';
 });
 
 // Function to handle apartamento input change (Atualiza morador sem recarregar a página)
