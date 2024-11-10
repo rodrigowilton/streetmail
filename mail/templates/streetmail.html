@@ -181,13 +181,8 @@
 <script>
 document.querySelectorAll('#tipo-buttons button').forEach(button => {
     button.addEventListener('click', function() {
-
         // Define o status de todos os botões como 0
-
-
         document.getElementById('cancelarBtn').style.display = 'block';
-
-
         document.querySelectorAll('#tipo-buttons button').forEach(btn => {
             btn.setAttribute('data-status', '0');
             btn.style.display = 'none';  // Esconde todos os botões
@@ -200,20 +195,8 @@ document.querySelectorAll('#tipo-buttons button').forEach(button => {
         // Exibe as gavetas correspondentes ao tipo
         if (this.getAttribute('data-tipo') === 'correspondencia') {
             document.getElementById('gaveta-buttons').style.display = 'flex';
-            document.getElementById('gaveta-buttons1').style.display = 'none';
-            document.getElementById('gaveta-buttons2').style.display = 'none';
-        } else if (this.getAttribute('data-tipo') === 'encomenda_pequena') {
-            document.getElementById('gaveta-buttons').style.display = 'flex';
-            document.getElementById('gaveta-buttons1').style.display = 'none';
-            document.getElementById('gaveta-buttons2').style.display = 'none';
-        } else if (this.getAttribute('data-tipo') === 'encomenda_media') {
+        } else {
             document.getElementById('gaveta-buttons').style.display = 'none';
-            document.getElementById('gaveta-buttons1').style.display = 'flex';
-            document.getElementById('gaveta-buttons2').style.display = 'none';
-        } else if (this.getAttribute('data-tipo') === 'encomenda_grande') {
-            document.getElementById('gaveta-buttons').style.display = 'none';
-            document.getElementById('gaveta-buttons1').style.display = 'none';
-            document.getElementById('gaveta-buttons2').style.display = 'flex';
         }
     });
 });
@@ -231,25 +214,19 @@ document.querySelectorAll('.gaveta').forEach(gavetaButton => {
         this.style.display = 'block'; // Exibe a gaveta selecionada
 
         document.getElementById('confirmarBtn').style.display = 'block';
-
-		// Mantém o valor do apartamento visível ao digitar
-			document.getElementById('apartamento').addEventListener('input', function(event) {
-		// Não faz nada, só mantém o valor
-		});
-
-	 });
+    });
 });
 
 // Function to handle 'Cancelar' button click
-document.getElementById('cancelarBtn').addEventListener('click', function() {
-    window.location.href = '/mail';
+		document.getElementById('cancelarBtn').addEventListener('click', function() {
+    		window.location.href = '/mail';
 });
 
-// Function to handle apartamento input change
+// Function to handle apartamento input change (Atualiza morador sem recarregar a página)
 document.getElementById('apartamento').addEventListener('input', function() {
     let apartamento = this.value;
     if (apartamento.length > 0) {
-        fetch(`/buscar_morador/${apartamento}`)
+        fetch(`/mail/buscar_moradores/${apartamento}`)
             .then(response => response.json())
             .then(data => {
                 let selectMorador = document.getElementById('morador');
@@ -264,6 +241,27 @@ document.getElementById('apartamento').addEventListener('input', function() {
     }
 });
 
+// Handle 'Enter' key to prevent form submission and update moradores dynamically
+document.getElementById('apartamento').addEventListener('keydown', function(event) {
+    if (event.key === 'Enter') {
+        event.preventDefault();  // Prevent form submission
+        let apartamento = this.value;
+        if (apartamento.length > 0) {
+            fetch(`/mail/buscar_moradores/${apartamento}`)
+                .then(response => response.json())
+                .then(data => {
+                    let selectMorador = document.getElementById('morador');
+                    selectMorador.innerHTML = '<option value="">Selecione o morador</option>';
+                    data.moradores.forEach(morador => {
+                        let option = document.createElement('option');
+                        option.value = morador.id;
+                        option.textContent = morador.morador;
+                        selectMorador.appendChild(option);
+                    });
+                });
+        }
+    }
+});
 </script>
 </body>
 </html>
