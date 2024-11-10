@@ -204,6 +204,61 @@ document.querySelectorAll('#tipo-buttons button').forEach(button => {
         }
     });
 });
+
+document.querySelectorAll('#tipo-buttons button').forEach(button => {
+    button.addEventListener('click', function() {
+
+        // Define o status de todos os botões como 0
+        document.getElementById('cancelarBtn').style.display = 'block';
+        document.querySelectorAll('#tipo-buttons button').forEach(btn => {
+            btn.setAttribute('data-status', '0');
+            btn.style.display = 'none';  // Esconde todos os botões
+        });
+
+        // Exibe o botão clicado e define seu status como 1
+        this.setAttribute('data-status', '1');
+        this.style.display = 'block'; // Exibe o botão clicado
+
+        // Exibe as gavetas correspondentes ao tipo
+        const tipoSelecionado = this.getAttribute('data-tipo');
+
+        // Verifica se o tipo é 'encomenda_media'
+        if (tipoSelecionado === 'encomenda_media'){
+            document.getElementById('gaveta-buttons1').style.display = 'flex';
+        } else {
+            document.getElementById('gaveta-buttons1').style.display = 'none';
+        }
+    });
+});
+
+
+document.querySelectorAll('#tipo-buttons button').forEach(button => {
+    button.addEventListener('click', function() {
+
+        // Define o status de todos os botões como 0
+        document.getElementById('cancelarBtn').style.display = 'block';
+        document.querySelectorAll('#tipo-buttons button').forEach(btn => {
+            btn.setAttribute('data-status', '0');
+            btn.style.display = 'none';  // Esconde todos os botões
+        });
+
+        // Exibe o botão clicado e define seu status como 1
+        this.setAttribute('data-status', '1');
+        this.style.display = 'block'; // Exibe o botão clicado
+
+        // Exibe as gavetas correspondentes ao tipo
+        const tipoSelecionado = this.getAttribute('data-tipo');
+
+        // Verifica se o tipo é 'encomenda_grande'
+        if (tipoSelecionado === 'encomenda_grande'){
+            document.getElementById('gaveta-buttons2').style.display = 'flex';
+        } else {
+            document.getElementById('gaveta-buttons2').style.display = 'none';
+        }
+    });
+});
+
+
 document.querySelectorAll('.gaveta').forEach(gavetaButton => {
     gavetaButton.addEventListener('click', function() {
         // Esconde todas as gavetas
